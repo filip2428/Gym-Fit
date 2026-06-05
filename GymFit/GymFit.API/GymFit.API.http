@@ -1,0 +1,42 @@
+@host = http://localhost:5080
+@token = PASTE_JWT_HERE
+
+### Register a new user
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "jane@example.com",
+  "password": "Password123!",
+  "fullName": "Jane Doe"
+}
+
+### Login (use admin seeded account)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gymfit.com",
+  "password": "Admin123!"
+}
+
+### List classes (public)
+GET {{host}}/api/classes
+
+### My membership status
+GET {{host}}/api/membership/status
+Authorization: Bearer {{token}}
+
+### Activate a membership (admin)
+POST {{host}}/api/membership/activate
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": "00000000-0000-0000-0000-000000000000",
+  "durationDays": 30
+}
+
+### Generate my QR code
+GET {{host}}/api/qr/generate
+Authorization: Bearer {{token}}

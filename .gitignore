@@ -1,0 +1,11 @@
+# Build output
+**/bin/
+**/obj/
+
+# User-specific / IDE
+.vs/
+*.user
+
+# Uploaded files (keep the folder, ignore contents)
+GymFit/GymFit.API/wwwroot/uploads/*
+!GymFit/GymFit.API/wwwroot/uploads/.gitkeep
