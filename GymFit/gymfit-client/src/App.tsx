@@ -5,6 +5,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Layout from "@/components/Layout";
 
 import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 import TrainersList from "@/pages/TrainersList";
 import TrainerProfile from "@/pages/TrainerProfile";
 import Dashboard from "@/pages/Dashboard";
@@ -29,6 +30,7 @@ export default function App() {
         <Routes>
           {/* Standalone */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Pages with the public/user navbar layout */}
           <Route element={<Layout />}>

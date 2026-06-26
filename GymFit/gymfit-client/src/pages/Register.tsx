@@ -17,20 +17,33 @@ import {
 } from "@/components/ui/card";
 import ErrorMessage from "@/components/ErrorMessage";
 
-export default function Login() {
+export default function Register() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const { data } = await api.post<AuthResponse>("/api/auth/login", {
+      const { data } = await api.post<AuthResponse>("/api/auth/register", {
+        fullName,
         email,
         password,
       });
@@ -38,24 +51,36 @@ export default function Login() {
       const user = getUserFromToken(data.token);
       navigate(dashboardPathForRole(user?.role), { replace: true });
     } catch (err) {
-      setError(getErrorMessage(err, "Invalid email or password."));
+      setError(getErrorMessage(err, "Could not create your account."));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-900 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-900 px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Dumbbell className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Welcome to GymFit</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
+          <CardTitle className="text-2xl">Create your account</CardTitle>
+          <CardDescription>Join GymFit and start training</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full name</Label>
+              <Input
+                id="fullName"
+                type="text"
+                placeholder="Jane Doe"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                autoFocus
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -65,7 +90,6 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                autoFocus
               />
             </div>
             <div className="space-y-2">
@@ -77,27 +101,37 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
               />
             </div>
 
             <ErrorMessage message={error} />
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in…" : "Sign in"}
+              {loading ? "Creating account…" : "Create account"}
             </Button>
           </form>
 
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/register" className="font-medium text-primary hover:underline">
-              Sign up
-            </Link>
+            New members start with an inactive membership — the front desk will
+            activate it for you.
           </p>
 
-          <p className="mt-2 text-center text-sm text-muted-foreground">
-            Want to browse first?{" "}
-            <Link to="/trainers" className="font-medium text-primary hover:underline">
-              View our trainers
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link to="/login" className="font-medium text-primary hover:underline">
+              Sign in
             </Link>
           </p>
         </CardContent>
