@@ -26,6 +26,8 @@ public static class DbSeeder
         // members - mix of active, expired, and inactive so the badges look good
         await EnsureUserAsync(db, "member@gymfit.com", MemberPassword, "Mary Member", UserRole.User,
             membership: Active(now, days: 30));
+        await EnsureUserAsync(db, "filip@gymfit.com", MemberPassword, "Filip Hac", UserRole.User,
+            membership: Active(now, days: 90));
         await EnsureUserAsync(db, "john@gymfit.com", MemberPassword, "John Carter", UserRole.User,
             membership: Active(now, days: 180));
         await EnsureUserAsync(db, "sarah@gymfit.com", MemberPassword, "Sarah Nguyen", UserRole.User,
